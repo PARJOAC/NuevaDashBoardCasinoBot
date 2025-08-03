@@ -10,20 +10,22 @@ const passport = require("passport");
 dotenv.config();
 const app = express();
 
+// 📌 Conectar a MongoDB
 mongoose.connect(process.env.MONGODB_URI);
 
-// ✅ PRIMERO: Cargar el webhook ANTES de cualquier bodyParser
+// 📌 Cargar el webhook ANTES de cualquier bodyParser o CSRF
 app.use("/webhook", require("./routes/stripeWebhook"));
 
-// Configuración de vistas
+// 📌 Configuración de vistas
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Middlewares
+// 📌 Middlewares generales
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json()); // ⚠️ Después de cargar el webhook
 
+// 📌 Configuración de sesiones
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
@@ -34,19 +36,29 @@ app.use(
     })
 );
 
+// 📌 Configuración de Passport (Discord OAuth)
 require("./config/discord")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+// 📌 CSRF (después de sesiones y parseadores)
 app.use(csrf());
 
+// 📌 Variables globales para vistas
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
     res.locals.user = req.session.user || null;
     next();
 });
 
-// Función utilitaria
+// 📌 Rutas principales
+app.use("/", require("./routes/auth"));
+app.use("/dashboard", require("./routes/dashboard"));
+app.use("/servers", require("./routes/servers"));
+app.use("/privacy", require("./routes/privacy"));
+app.use("/terms", require("./routes/terms"));
+
+// 📌 Función utilitaria para formatear números
 function formatNumber(num) {
     if (num >= 1_000_000_000) return `+${(num / 1_000_000_000).toFixed(1)}B`;
     if (num >= 1_000_000) return `+${(num / 1_000_000).toFixed(1)}M`;
@@ -54,8 +66,9 @@ function formatNumber(num) {
     return `+${num}`;
 }
 
-// Página principal
+// 📌 Página principal
 const client = require("./config/botClient");
+
 app.get("/", async (req, res) => {
     try {
         const guilds = client.guilds.cache;
@@ -93,6 +106,7 @@ app.get("/", async (req, res) => {
     }
 });
 
+// 📌 Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
     console.log(`🚀 Dashboard iniciado en ${process.env.BASE_URL}:${PORT}`)

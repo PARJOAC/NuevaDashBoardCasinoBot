@@ -90,7 +90,7 @@
               </a>
               <% } %> <% } else { %>
               <a
-                href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot&permissions=8&guild_id=<%= server.id %>&redirect_uri=<%= encodeURIComponent(`${process.env.BASE_URL}/bot-added`) %>&response_type=code"
+                href="https://discord.com/oauth2/authorize?client_id=<%= clientId %>&scope=bot&permissions=8&guild_id=<%= server.id %>&redirect_uri=<%= encodeURIComponent(`${process.env.BASE_URL}/dashboard`) %>&response_type=code"
                 class="btn btn-success w-100 mb-2"
               >
                 ➕ Invite Bot

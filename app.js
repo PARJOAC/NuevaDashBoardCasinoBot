@@ -12,14 +12,17 @@ const app = express();
 
 mongoose.connect(process.env.MONGODB_URI);
 
+// ✅ PRIMERO: Cargar el webhook ANTES de cualquier bodyParser
+app.use("/webhook", require("./routes/stripeWebhook"));
+
 // Configuración de vistas
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Middlewares
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true })); // ✅ Necesario para leer datos de formularios
-app.use(express.json()); // ✅ Necesario para leer JSON enviado con fetch
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(
     session({
@@ -35,22 +38,13 @@ require("./config/discord")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ✅ CSRF DESPUÉS de session y parseadores
 app.use(csrf());
 
-// ✅ Valores disponibles en todas las vistas
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
     res.locals.user = req.session.user || null;
     next();
 });
-
-// Rutas
-app.use("/", require("./routes/auth"));
-app.use("/dashboard", require("./routes/dashboard"));
-app.use("/servers", require("./routes/servers"));
-app.use("/privacy", require("./routes/privacy"));
-app.use("/terms", require("./routes/terms"));
 
 // Función utilitaria
 function formatNumber(num) {

@@ -101,5 +101,5 @@ app.get("/", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
-    console.log(`🚀 Dashboard iniciado en http://localhost:${PORT}`)
+    console.log(`🚀 Dashboard iniciado en ${process.env.BASE_URL}:${PORT}`)
 );

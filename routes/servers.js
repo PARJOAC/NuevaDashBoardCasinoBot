@@ -5,6 +5,9 @@ const serverController = require("../controllers/serverController");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Guild = require("../models/Guild");
 
+const client = require("../config/botClient");
+const { EmbedBuilder } = require("discord.js");
+
 // ✅ List of servers where the user is an admin
 router.get("/", isAuthenticated, serverController.getServers);
 
@@ -17,6 +20,9 @@ router.post("/:id/settings", isAuthenticated, serverController.updateServerSetti
 // ✅ Start Premium purchase with Stripe
 router.get("/:id/buy-premium", isAuthenticated, async (req, res) => {
     try {
+        const avatarUrl = req.user.avatar
+            ? `https://cdn.discordapp.com/avatars/${req.user.discordId}/${req.user.avatar}.png`
+            : `https://cdn.discordapp.com/embed/avatars/0.png`;
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"], // "paypal" no es compatible con Stripe Checkout
             mode: "payment",
@@ -35,8 +41,11 @@ router.get("/:id/buy-premium", isAuthenticated, async (req, res) => {
             success_url: `${process.env.BASE_URL}/servers/${req.params.id}/premium-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.BASE_URL}/dashboard`,
             metadata: {
-                guildId: req.params.id, // Guardamos el ID del servidor para usarlo en el webhook
-                userId: req.user.id, // Opcional: para saber quién ha pagado
+                guildId: req.params.id,
+                guildName: req.guild.name, // Asegúrate de pasar el nombre del servidor
+                userId: req.user.id,
+                userName: req.user.username,
+                userAvatar: avatarUrl // Debe contener la URL del avatar
             },
         });
 
@@ -108,6 +117,39 @@ router.post(
                 console.log(`✅ Premium activado para el servidor ${guildId}`);
             } catch (err) {
                 console.error("❌ Error activando premium en DB:", err.message);
+            }
+
+            // ✅ ENVIAR EMBED CON EL BOT
+            try {
+                const embed = new EmbedBuilder()
+                    .setTitle("🛍️ PURCHASE SUCCESS")
+                    .setColor(0x2b2d31)
+                    .addFields(
+                        { name: "Server Name:", value: `${session.metadata.guildName} (${session.metadata.guildId})` },
+                        { name: "User:", value: `${session.metadata.userName} (${session.metadata.userId})` },
+                        { name: "Purchase:", value: "Premium" },
+                        { name: "Quantity:", value: "1", inline: true },
+                        { name: "Date:", value: new Date(session.created * 1000).toUTCString(), inline: true },
+                        { name: "Total Price:", value: `${(session.amount_total / 100).toFixed(2)}€`, inline: true },
+                        { name: "Currency:", value: session.currency, inline: true },
+                        { name: "Purchase ID:", value: session.id }
+                    )
+                    .setThumbnail(session.metadata.userAvatar) // 🔹 Avatar real del comprador
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setTimestamp();
+
+                // ID del canal donde quieres que se envíe
+                const channelId = process.env.DISCORD_LOG_CHANNEL; // Guárdalo en .env
+                const channel = await client.channels.fetch(channelId);
+
+                if (channel && channel.isTextBased()) {
+                    await channel.send({ embeds: [embed] });
+                    console.log("✅ Embed enviado al canal del bot");
+                } else {
+                    console.error("❌ No se pudo encontrar el canal o no es de texto");
+                }
+            } catch (err) {
+                console.error("❌ Error enviando embed con el bot:", err);
             }
         }
 

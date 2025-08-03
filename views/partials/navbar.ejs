@@ -1,0 +1,121 @@
+<nav class="navbar my-3">
+  <div class="container d-flex justify-content-center">
+    <div
+      class="px-4 py-2 w-100"
+      style="
+        max-width: 1000px;
+        background: linear-gradient(135deg, #2c3e50, #3a506b);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
+      "
+    >
+      <div class="d-flex align-items-center justify-content-between">
+        <!-- Logo -->
+        <a
+          href="/"
+          class="navbar-brand d-flex align-items-center text-white text-decoration-none"
+        >
+          <img
+            src="/images/logo.png"
+            alt="CasinoBot Logo"
+            width="36"
+            height="36"
+            class="me-2 rounded-circle shadow-sm"
+          />
+          <span class="fw-bold fs-4">CasinoBot</span>
+        </a>
+
+        <!-- Botón hamburguesa -->
+        <button
+          class="navbar-toggler border-0 shadow-none ms-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+
+      <!-- Contenido colapsable -->
+      <div class="collapse navbar-collapse mt-3" id="navbarContent">
+        <div
+          class="d-flex flex-column flex-lg-row justify-content-between align-items-center gap-3 p-3"
+        >
+          <!-- Links -->
+          <ul
+            class="navbar-nav nav-pills gap-2 flex-lg-row flex-column text-center mb-0"
+          >
+            <li class="nav-item">
+              <a class="nav-link px-3 text-white" href="/dashboard">Servers</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link px-3 text-white"
+                href="https://casinobot.gitbook.io/casinobot-docs"
+                target="_blank"
+              >
+                Documentation
+              </a>
+            </li>
+          </ul>
+
+          <!-- Usuario -->
+          <div class="d-flex align-items-center gap-2">
+            <% if (user) { %>
+            <div
+              class="d-flex align-items-center bg-white bg-opacity-10 px-3 py-1 rounded"
+              style="border-radius: 10px"
+            >
+              <img
+                src="https://cdn.discordapp.com/avatars/<%= user.discordId %>/<%= user.avatar %>.png"
+                alt="Avatar"
+                width="30"
+                height="30"
+                class="rounded-circle me-2 border border-light"
+              />
+              <span class="fw-semibold text-white"><%= user.username %></span>
+            </div>
+            <a
+              href="/auth/logout"
+              class="btn btn-outline-light rounded fw-semibold px-3"
+              style="border-radius: 10px"
+            >
+              Logout
+            </a>
+            <% } else { %>
+            <a
+              href="/auth/login"
+              class="btn d-flex align-items-center gap-2 fw-semibold px-3"
+              style="background: #5865f2; color: white; border-radius: 10px"
+            >
+              <i class="bi bi-discord fs-5"></i> Sign in
+            </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255,255,255,1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  .nav-pills .nav-link {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .nav-pills .nav-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .nav-pills .nav-link.active {
+    background: #28a745;
+    font-weight: 600;
+  }
+</style>

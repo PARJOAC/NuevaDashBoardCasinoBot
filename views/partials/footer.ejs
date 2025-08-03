@@ -1,0 +1,55 @@
+<footer class="my-3 d-flex justify-content-center">
+  <div
+    class="px-4 py-3 w-100"
+    style="
+      max-width: 1000px;
+      background: linear-gradient(135deg, #2c3e50, #3a506b);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+    "
+  >
+    <div
+      class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 text-center text-md-start"
+    >
+      <!-- Texto -->
+      <p class="mb-0 fw-semibold text-white">
+        © <%= new Date().getFullYear() %> CasinoBot – All rights reserved
+      </p>
+
+      <!-- Enlaces -->
+      <ul class="nav gap-3 justify-content-center mb-0">
+        <li class="nav-item">
+          <a
+            class="nav-link text-white-50"
+            href="https://casinobot.gitbook.io/casinobot-docs"
+            target="_blank"
+          >
+            Documentation
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white-50" href="/privacy">Privacy Policy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white-50" href="/terms">Terms & Conditions</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer .nav-link {
+    transition: opacity 0.2s;
+    font-weight: 500;
+  }
+
+  footer .nav-link:hover {
+    opacity: 0.9;
+    color: white !important;
+  }
+
+  footer p {
+    opacity: 0.9;
+  }
+</style>

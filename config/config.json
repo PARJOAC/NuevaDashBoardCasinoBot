@@ -1,0 +1,27 @@
+{
+  "botId": "1295707177066954875",
+  "ownerId": "714376484139040809",
+  "guildId": "1297711866897764443",
+
+  "minBetAllowed": 100,
+  "maxBetAllowed": 1500000,
+  "maxBetLvl5": 10000,
+  "maxBetLvl15": 20000,
+  "maxBetLvl35": 50000,
+  "maxBetLvl75": 75000,
+  "maxBetLvl150": 500000,
+  "maxBetLvl300": 1000000,
+  "initBalance": 20000,
+  "initMultiplier": 1,
+  "initBalloon": 0,
+  "initMobile": 0,
+  "initBike": 0,
+  "initCar": 0,
+  "initCastle": 0,
+  "initLevel": 1,
+  "xpLevel": 350,
+  "rewardWork": 1000,
+  "rewardDaily": 10000,
+  "rewardWeekly": 50000,
+  "itemPercentage": 15
+}

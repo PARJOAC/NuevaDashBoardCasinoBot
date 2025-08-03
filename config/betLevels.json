@@ -1,0 +1,10 @@
+{
+  "levels": [
+    { "field": "maxBetLvl5", "level": 5 },
+    { "field": "maxBetLvl15", "level": 15 },
+    { "field": "maxBetLvl35", "level": 35 },
+    { "field": "maxBetLvl75", "level": 75 },
+    { "field": "maxBetLvl150", "level": 150 },
+    { "field": "maxBetLvl300", "level": 300 }
+  ]
+}

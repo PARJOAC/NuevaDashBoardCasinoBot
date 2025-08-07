@@ -24,15 +24,17 @@ router.get("/:id/buy-premium", isAuthenticated, async (req, res) => {
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
-            mode: "payment",
+            mode: "subscription",
             line_items: [
                 {
                     price_data: {
                         currency: "eur",
                         product_data: {
-                            name: "CasinoBot Premium - Gives you access to ALL commands to take your experience to the next level!",
+                            name: "CasinoBot Premium",
+                            description: "Gives you access to ALL commands to take your experience to the next level!"
                         },
-                        unit_amount: 799, // Price in cents (€7.99)
+                        unit_amount: 399, // Price in cents (€3.99)
+                        recurring: "subscription"
                     },
                     quantity: 1,
                 },

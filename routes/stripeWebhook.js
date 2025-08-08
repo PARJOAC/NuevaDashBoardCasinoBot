@@ -49,7 +49,7 @@ router.post("/", express.raw({ type: "application/json" }), async (req, res) => 
                 status: "active",
             };
 
-            let userSub = await UserSubscription.findOne({ userId });
+            let userSub = await UserSubscription.findOne({ userId: userId });
             if (!userSub) {
                 userSub = new UserSubscription({ userId, subscriptions: [subEntry] });
             } else {
